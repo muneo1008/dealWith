@@ -22,7 +22,6 @@ public class AuctionDto {
         this.title = title;
         this.highestPrice = highestPrice;
         this.roomId = roomId;
-
     }
     public AuctionDto(Long idx,
                       String title,

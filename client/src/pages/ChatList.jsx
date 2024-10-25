@@ -116,8 +116,8 @@ const ChatList = ({buyerId})=>{
                             </Typography>
                         </ListItem>
                     ):(
-                        auctionList.map((auction) => (
-                            <Box key={auction.id}>
+                        auctionList.map((auction,index) => (
+                            <Box key={index}>
                                 <ListItem alignItems="flex-start" onClick={()=>handleAuction(auction)}>
                                     <ListItemAvatar>
                                         <Avatar >{auction.roomId}</Avatar> {/* Seller ID를 아바타로 사용 */}

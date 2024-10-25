@@ -4,11 +4,15 @@ import com.muneo.dealwith.Dto.*;
 import com.muneo.dealwith.Entity.*;
 import com.muneo.dealwith.Repository.AuctionRepository;
 import com.muneo.dealwith.Repository.ItemRepository;
+import com.muneo.dealwith.Service.AuctionMessageService;
 import com.muneo.dealwith.Service.AuctionRoomPartService;
 import com.muneo.dealwith.Service.AuctionRoomService;
 import com.muneo.dealwith.Service.GcsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +32,8 @@ public class AuctionController {
     private final AuctionRoomService auctionRoomService;
     private final AuctionRoomPartService auctionRoomPartService;
     private final ItemRepository itemRepository;
+    private final AuctionMessageService auctionMessageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/load/auction")
     public List<AuctionDto> loadAuction() {
@@ -115,5 +121,16 @@ public class AuctionController {
 
 
         return ResponseEntity.ok(auctionDTOs);
+    }
+
+    @MessageMapping("/auction/{roomId}")
+    public void sendMessage(@DestinationVariable Long roomId,
+                            int price,
+                            Authentication auth) throws IOException {
+        var user = (CustomUser) auth.getPrincipal();
+        Long userIdx = Long.parseLong(user.getUserIdx());
+        AuctionMessage savedMessage = auctionMessageService.sendMessage(roomId, userIdx, price);
+
+        messagingTemplate.convertAndSend("/topic/auction/"+roomId, savedMessage);
     }
 }
