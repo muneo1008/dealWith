@@ -23,7 +23,7 @@ public class AuctionMessage {
     private Member sender; // 메시지 보낸 사람
 
     @Column(nullable = false)
-    private int price;
+    private String price;
 
     private LocalDateTime timestamp = LocalDateTime.now();
 }

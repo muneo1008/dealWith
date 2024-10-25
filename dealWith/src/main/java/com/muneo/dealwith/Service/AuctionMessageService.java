@@ -1,5 +1,6 @@
 package com.muneo.dealwith.Service;
 
+import com.muneo.dealwith.Dto.AuctionMessageDto;
 import com.muneo.dealwith.Entity.AuctionMessage;
 import com.muneo.dealwith.Entity.AuctionRoom;
 import com.muneo.dealwith.Entity.Member;
@@ -16,7 +17,7 @@ public class AuctionMessageService {
     private final AuctionRoomRepository auctionRoomRepository;
 
     @Transactional
-    public AuctionMessage sendMessage(Long roomId, Long senderId, int price){
+    public AuctionMessage sendMessage(Long roomId, Long senderId, String price){
         AuctionRoom auctionRoom = auctionRoomRepository.findById(roomId).orElse(null);
 
         AuctionMessage auctionMessage = new AuctionMessage();
@@ -29,4 +30,12 @@ public class AuctionMessageService {
         return auctionMessageRepository.save(auctionMessage);
     }
 
+    public AuctionMessageDto convertToDTO(AuctionMessage message) {
+        return new AuctionMessageDto(
+                message.getIdx(),
+                message.getSender().getIdx(),
+                message.getPrice(),
+                message.getAuctionRoom().getIdx() // roomId를 직접 참조
+        );
+    }
 }

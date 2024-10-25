@@ -44,8 +44,8 @@ const AuctionChat = ()=>{
 
         stompClient.connect({Authorization: `Bearer ${token}`}, () => {
             stompClient.subscribe(`/topic/auction/${id}`, (msg) => {
-                const newMessage = JSON.parse(msg.body);
-                console.log("newMesage: "+newMessage.senderId);
+                const newMessage = msg.body;
+                console.log("newMesage: "+newMessage);
                 setMessages(prev => [...prev, newMessage]);
 
             });
@@ -136,7 +136,7 @@ const AuctionChat = ()=>{
                                                     User {msg.senderId}
                                                 </Typography>
                                                 <ListItemText
-                                                    primary={JSON.parse(msg.message).message} // 메시지 표시
+                                                    primary={msg.price} // 메시지 표시
                                                 />
                                             </Box>
                                             <Box sx={{

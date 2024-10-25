@@ -86,7 +86,7 @@ public class AuctionRoomService {
     }
 
     @Transactional
-    public AuctionMessage addChatMessage(Long auctionRoomId, Long senderId, int price) {
+    public AuctionMessage addChatMessage(Long auctionRoomId, Long senderId, String price) {
         AuctionRoom auctionRoom = auctionRoomRepository.findById(auctionRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("AuctionRoom not found"));
 

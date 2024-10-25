@@ -125,12 +125,12 @@ public class AuctionController {
 
     @MessageMapping("/auction/{roomId}")
     public void sendMessage(@DestinationVariable Long roomId,
-                            int price,
+                            String price,
                             Authentication auth) throws IOException {
         var user = (CustomUser) auth.getPrincipal();
         Long userIdx = Long.parseLong(user.getUserIdx());
-        AuctionMessage savedMessage = auctionMessageService.sendMessage(roomId, userIdx, price);
-
-        messagingTemplate.convertAndSend("/topic/auction/"+roomId, savedMessage);
+        AuctionMessage savedMessage = auctionMessageService.sendMessage(roomId, userIdx, String.valueOf(price));
+        AuctionMessageDto messageDto  = auctionMessageService.convertToDTO(savedMessage);
+        messagingTemplate.convertAndSend("/topic/auction/"+roomId, messageDto);
     }
 }
